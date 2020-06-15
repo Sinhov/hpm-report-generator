@@ -10,6 +10,7 @@ import Transportation from "./Transportation";
 import Internal from "./Internal";
 import Capacity from "./Capacity";
 import ReservationDetails from "./ReservationDetails";
+import DayDetail from "./DayDetail";
 
 export const useStyles = makeStyles((theme) => ({
     content: {
@@ -89,7 +90,7 @@ export default function Views(args) {
                     <Capacity dfServices={args.dfServices}/>
                 </TabPanel>
                 <TabPanel value={value} index={3}>
-                    Item Four
+                    <DayDetail dfServices={args.dfServices}/>
                 </TabPanel>
                 <TabPanel value={value} index={4}>
                     <ReservationDetails dfServices={args.dfServices}/>

@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import DateFnsUtils from '@date-io/date-fns';
+import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
 
 function createData(date, dogName, ownerName, reservation, address, city, state, ownerPhone, driver) {
     return { date, dogName, ownerName, reservation, address, city, state, ownerPhone, driver };
@@ -144,6 +146,9 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
+    date: {
+        marginLeft: 20,
+    }
 }));
 
 const strip = (str) => {
@@ -153,14 +158,28 @@ const strip = (str) => {
     return str.substring(1, str.length-1);
 };
 
-export default function ReservationDetails(args) {
-    const services = args.dfServices.toDict();
-    let rows =[];
-    for (let i = 0; services["Owner First Name"] !== undefined && i < services["Owner First Name"].length; i++){
-        rows.push(createData(strip(services["Scheduled At"][i]), services["Animal Name"][i], services["Owner First Name"][i]
-            + " " + services["Owner Last Name"][i], strip(services["Reservation Type"][i]), strip(services["Address 1"][i]),
-            services["it"][i], services["tat"][i], strip(services["Cell Phone"][i]), strip(services["Service Assigned To"][i])));
-    }
+export default function DayDetail(args) {
+    const [selectedDate, handleDateChange] = React.useState(new Date());
+    const [rows, setRows] = React.useState([]);
+
+    React.useEffect(() => {
+        const services = args.dfServices.toDict();
+        let tempRows = [];
+        for (let i = 0; services["Owner First Name"] !== undefined && i < services["Owner First Name"].length; i++){
+            if (services["Scheduled At"][i] !== "") {
+                let scheduledAt = new Date(strip(services["Scheduled At"][i]));
+                let schDate = new Date(scheduledAt.getMonth() + 1 + "/" + scheduledAt.getDate() + "/" + scheduledAt.getFullYear()).getTime();
+                let selDate = new Date(selectedDate.getMonth() + 1 + "/" + selectedDate.getDate() + "/" + selectedDate.getFullYear()).getTime();
+                if (schDate === selDate) {
+                    tempRows.push(createData(strip(services["Scheduled At"][i]), services["Animal Name"][i], services["Owner" +
+                        " First Name"][i]
+                        + " " + services["Owner Last Name"][i], strip(services["Reservation Type"][i]), strip(services["Address 1"][i]),
+                        services["it"][i], services["tat"][i], strip(services["Cell Phone"][i]), strip(services["Service Assigned To"][i])));
+                }
+            }
+        }
+        setRows(tempRows);
+    }, [selectedDate, args.dfServices]);
 
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
@@ -192,6 +211,19 @@ export default function ReservationDetails(args) {
 
     return (
         <div className={classes.root}>
+            <Typography variant={"body1"} style={{display: 'inline-block'}}>
+                Enter Date:
+            </Typography>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                    value={selectedDate}
+                    onChange={date => handleDateChange(date)}
+                    format="yyyy/MM/dd"
+                    className={classes.date}
+                />
+            </MuiPickersUtilsProvider>
+            <br/>
+            <br/>
             <Paper className={classes.paper}>
                 <EnhancedTableToolbar />
                 <TableContainer>
