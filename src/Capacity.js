@@ -84,7 +84,6 @@ export default function Capacity(args) {
         appointments.push(tempJSON);
         i++;
     });
-    console.log(appointments);
 
     const owners = [{
         text: 'Board & Train',

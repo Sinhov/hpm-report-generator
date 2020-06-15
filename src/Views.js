@@ -9,6 +9,7 @@ import Box from "@material-ui/core/Box/Box";
 import Transportation from "./Transportation";
 import Internal from "./Internal";
 import Capacity from "./Capacity";
+import ReservationDetails from "./ReservationDetails";
 
 export const useStyles = makeStyles((theme) => ({
     content: {
@@ -91,7 +92,7 @@ export default function Views(args) {
                     Item Four
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                    Item Five
+                    <ReservationDetails dfServices={args.dfServices}/>
                 </TabPanel>
             </main>
         </div>
