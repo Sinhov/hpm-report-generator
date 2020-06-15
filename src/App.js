@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
+import Home from "./Home";
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import Views from "./Views";
+import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline";
+import TopNav from "./TopNav";
+import DataFrame from "dataframe-js";
 
-function App() {
+export default function App() {
+  const [dfServices, setDfServices] = React.useState(new DataFrame([],[]));
+  const [dfReservations, setDfReservations] = React.useState(new DataFrame([],[]));
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CssBaseline />
+      <Router>
+        <TopNav/>
+        <Switch>
+          <Route exact path="/">
+            <Home dfServices={dfServices} setDfServices={setDfServices} dfReservations={dfReservations}
+                  setDfReservations={setDfReservations}/>
+          </Route>
+          <Route exact path="/views">
+            <Views dfServices={dfServices} dfReservations={dfReservations}/>
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }
-
-export default App;
