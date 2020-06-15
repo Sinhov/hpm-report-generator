@@ -7,6 +7,7 @@ import Tab from "@material-ui/core/Tab/Tab";
 import Card from "@material-ui/core/Card/Card";
 import Box from "@material-ui/core/Box/Box";
 import Transportation from "./Transportation";
+import Internal from "./Internal";
 
 export const useStyles = makeStyles((theme) => ({
     content: {
@@ -77,10 +78,10 @@ export default function Views(args) {
                     </Tabs>
                 </Card>
                 <TabPanel value={value} index={0}>
-                    <Transportation dfServices={args.dfServices} dfReservations={args.dfReservations}/>
+                    <Transportation dfServices={args.dfServices}/>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    Item Two
+                    <Internal dfServices={args.dfServices}/>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                     Item Three

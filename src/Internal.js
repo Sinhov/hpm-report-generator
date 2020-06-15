@@ -20,45 +20,62 @@ import {
     lightBlue, green, orange,
 } from '@material-ui/core/colors';
 
-export default function Transportation(args) {
-    const dfTransportation = args.dfServices.filter(row => (row.get("Service Name") === "\"B&T Program | Lesson at" +
+export default function Internal(args) {
+    const dfBathing = args.dfServices.filter(row => (row.get("Service Name") === "\"B&T Program | Lesson at" +
         " HPM\"") || (row.get("Service Name") === "\"B&T Program | In-Home Lesson\"") ||
-        (row.get("Service Name") === "\"Car Service | Pick Up\"") ||
         (row.get("Service Name") === "\"Car Service | Drop Off\""));
 
-    const transportation = dfTransportation.toDict();
-    let appointments = [];
-    for (let i = 0; i < transportation["Service Assigned To"].length; i++){
-        let str = transportation["Service Assigned To"][i];
+    const bathing = dfBathing.toDict();
+    let appointments = [], startDates = [];
+
+    const getStartDate = (date) => {
+        if (date.getHours() < 10){
+            date.setHours(16);
+            date.setMinutes(30);
+            date.setDate(date.getDate() - 1);
+        }
+        if (date.getHours() > 17 || (date.getHours() === 17  && date.getMinutes() === 30)){
+            date.setHours(16);
+            date.setMinutes(30);
+        }
+        while (startDates.includes(date.getTime())){
+            if (date.getMinutes(30)){
+                date.setMinutes(0);
+            } else {
+                date.setHours(date.getHours() - 1);
+                date.setMinutes(30);
+                if (date.getHours() < 10){
+                    date.setHours(16);
+                    date.setDate(date.getDate() - 1);
+                }
+            }
+        }
+        return date;
+    };
+
+    for (let i = 0; i < bathing["Scheduled At"].length; i++){
+        let date = new Date(bathing["Scheduled At"][i].substring(1, bathing["Scheduled At"][i].length-1));
         let tempJSON = {
             id: i,
-            title: transportation["Service Name"][i] + " for " + transportation["Animal Name"][i] + " " +
-                transportation["Owner Last Name"][i] + " in " + transportation["it"][i],
-            startDate: new Date(transportation["Scheduled At"][i].substring(1, transportation["Scheduled At"][i].length-1))
+            members: 2,
+            title: bathing["Animal Name"][i] + " " + bathing["Owner Last Name"][i],
+            startDate: getStartDate(date)
         };
+        startDates.push(tempJSON.startDate.getTime());
         tempJSON.endDate = new Date(tempJSON.startDate.getTime() + 30*60000);
-        // gabby
-        if (str === ""){
-            tempJSON.members = 1;
-        } else if (str.substring(1, str.length-1).trim() === "Unscheduled Services"){
-            tempJSON.members = 3;
-        } else {
-            tempJSON.members = 2;
-            tempJSON.title =tempJSON.title + " assigned to " + str.substring(1, str.length-1).trim();
-        }
         appointments.push(tempJSON);
     }
 
     const owners = [{
-        text: 'Gabby',
+        text: 'Swim',
         id: 1,
         color: lightBlue,
     }, {
-        text: 'Driver',
+        text: 'Bath',
         id: 2,
         color: green,
     }, {
-        text: 'Unscheduled',
+        text: 'Grooming',
         id: 3,
         color: orange,
     }];
