@@ -19,6 +19,7 @@ import {
 import {
     lightBlue, green, orange,
 } from '@material-ui/core/colors';
+import Paper from "@material-ui/core/Paper";
 
 export default function Capacity(args) {
     const services = args.dfServices.toDict();
@@ -129,7 +130,7 @@ export default function Capacity(args) {
     };
 
     return (
-        <div>
+        <Paper>
             <Scheduler
                 data={data}
                 height={1400}
@@ -171,7 +172,7 @@ export default function Capacity(args) {
                 <GroupingPanel />
                 <ConfirmationDialog/>
             </Scheduler>
-        </div>
+        </Paper>
     );
 }
 

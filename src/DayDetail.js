@@ -211,7 +211,7 @@ export default function DayDetail(args) {
 
     return (
         <div className={classes.root}>
-            <Typography variant={"body1"} style={{display: 'inline-block'}}>
+            <Typography variant={"body1"} style={{display: 'inline-block', marginTop:5}}>
                 Enter Date:
             </Typography>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>

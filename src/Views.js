@@ -4,18 +4,23 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography/Typography";
 import Tabs from "@material-ui/core/Tabs/Tabs";
 import Tab from "@material-ui/core/Tab/Tab";
-import Card from "@material-ui/core/Card/Card";
 import Box from "@material-ui/core/Box/Box";
 import Transportation from "./Transportation";
 import Internal from "./Internal";
 import Capacity from "./Capacity";
 import ReservationDetails from "./ReservationDetails";
 import DayDetail from "./DayDetail";
+import Paper from "@material-ui/core/Paper";
+import Container from "@material-ui/core/Container";
 
 export const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3)
+    },
+    container: {
+        width: '70%',
+        textAlign: "center",
     },
     toolbar: theme.mixins.toolbar
 }));
@@ -65,13 +70,16 @@ export default function Views(args) {
         <div>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                <Card>
+                <Container className={classes.container}>
+                <Paper className={classes.paper}>
                     <Tabs
                         value={value}
                         onChange={handleChange}
                         indicatorColor="primary"
                         textColor="primary"
                         centered
+                        scrollButtons="auto"
+                        variant="scrollable"
                     >
                         <Tab label="Transportation Overview" {...a11yProps(0)} />
                         <Tab label="Internal Services"  {...a11yProps(1)} />
@@ -79,7 +87,8 @@ export default function Views(args) {
                         <Tab label="Day Detail" {...a11yProps(3)} />
                         <Tab label="Full Reservation Detail"  {...a11yProps(4)} />
                     </Tabs>
-                </Card>
+                </Paper>
+                </Container>
                 <TabPanel value={value} index={0}>
                     <Transportation dfServices={args.dfServices}/>
                 </TabPanel>

@@ -19,6 +19,7 @@ import {
 import {
     lightBlue, green, orange,
 } from '@material-ui/core/colors';
+import Paper from "@material-ui/core/Paper";
 
 export default function Internal(args) {
     const dfBathing = args.dfServices.filter(row => (row.get("Service Name") === "\"B&T Program | Lesson at" +
@@ -110,7 +111,7 @@ export default function Internal(args) {
     };
 
     return (
-        <div>
+        <Paper>
             <Scheduler
                 data={data}
                 height={1400}
@@ -152,7 +153,7 @@ export default function Internal(args) {
                 <GroupingPanel />
                 <ConfirmationDialog/>
             </Scheduler>
-        </div>
+        </Paper>
     );
 }
 

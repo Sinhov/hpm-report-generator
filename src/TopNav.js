@@ -13,7 +13,11 @@ const useStyles = makeStyles(theme => ({
     typography: {
         textDecoration: "none",
         color: "#FFFFFF",
+        marginLeft: 20
     },
+    img: {
+        width: 150
+    }
 }));
 
 export default function TopNav() {
@@ -23,6 +27,9 @@ export default function TopNav() {
         <div>
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
+                    <Link to={"/"}>
+                        <img src={process.env.PUBLIC_URL + "/hpm-logo-new.png"} alt={"Happy Pup Manor"} className={classes.img}/>
+                    </Link>
                     <Typography variant="h5" component={Link} to={"/"} className={classes.typography}>
                         Report Generator
                     </Typography>

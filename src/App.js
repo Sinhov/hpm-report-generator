@@ -13,7 +13,7 @@ import DataFrame from "dataframe-js";
 
 export default function App() {
   const [dfServices, setDfServices] = React.useState(new DataFrame([],[]));
-  const [dfReservations, setDfReservations] = React.useState(new DataFrame([],[]));
+  // const [dfReservations, setDfReservations] = React.useState(new DataFrame([],[]));
 
   return (
     <div>
@@ -22,11 +22,10 @@ export default function App() {
         <TopNav/>
         <Switch>
           <Route exact path="/">
-            <Home dfServices={dfServices} setDfServices={setDfServices} dfReservations={dfReservations}
-                  setDfReservations={setDfReservations}/>
+            <Home dfServices={dfServices} setDfServices={setDfServices}/>
           </Route>
           <Route exact path="/views">
-            <Views dfServices={dfServices} dfReservations={dfReservations}/>
+            <Views dfServices={dfServices}/>
           </Route>
         </Switch>
       </Router>
