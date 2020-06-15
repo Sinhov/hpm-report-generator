@@ -20,45 +20,82 @@ import {
     lightBlue, green, orange,
 } from '@material-ui/core/colors';
 
-export default function Transportation(args) {
-    const dfTransportation = args.dfServices.filter(row => (row.get("Service Name") === "\"B&T Program | Lesson at" +
-        " HPM\"") || (row.get("Service Name") === "\"B&T Program | In-Home Lesson\"") ||
-        (row.get("Service Name") === "\"Car Service | Pick Up\"") ||
-        (row.get("Service Name") === "\"Car Service | Drop Off\""));
+export default function Capacity(args) {
+    const services = args.dfServices.toDict();
+    let appointments = [], boardAndTrain = {}, boarding = {}, carTrips = {};
 
-    const transportation = dfTransportation.toDict();
-    let appointments = [];
-    for (let i = 0; transportation["Service Assigned To"] !== undefined && i < transportation["Service Assigned To"].length; i++){
-        let str = transportation["Service Assigned To"][i];
-        let tempJSON = {
-            id: i,
-            title: transportation["Service Name"][i] + " for " + transportation["Animal Name"][i] + " " +
-                transportation["Owner Last Name"][i] + " in " + transportation["it"][i],
-            startDate: new Date(transportation["Scheduled At"][i].substring(1, transportation["Scheduled At"][i].length-1))
-        };
-        tempJSON.endDate = new Date(tempJSON.startDate.getTime() + 30*60000);
-        // gabby
-        if (str === ""){
-            tempJSON.members = 1;
-        } else if (str.substring(1, str.length-1).trim() === "Unscheduled Services"){
-            tempJSON.members = 3;
-        } else {
-            tempJSON.members = 2;
-            tempJSON.title =tempJSON.title + " assigned to " + str.substring(1, str.length-1).trim();
+    for (let i = 0; i < services["Start Date"].length && services["Start Date"][i] !== undefined; i++){
+        let date = new Date(services["Start Date"][i].substring(1, services["Start Date"][i].length-1));
+        let dateStr = date.getMonth()+1+"/"+date.getDate()+"/"+date.getFullYear();
+        if (services["Reservation Type"][i] === "\"Board & Train | 10 Day Program\"" ||
+            services["Reservation Type"][i] === "\"Board & Train | 28+ Day Program\""){
+            if (boardAndTrain.hasOwnProperty(dateStr)){
+                boardAndTrain[dateStr] = boardAndTrain[dateStr] + 1;
+            } else {
+                boardAndTrain[dateStr] = 1;
+            }
+        } else if (services["Reservation Type"][i] === "\"Boarding | Luxury Boarding\""){
+            if (boarding.hasOwnProperty(dateStr)){
+                boarding[dateStr] = boarding[dateStr] + 1;
+            } else {
+                boarding[dateStr] = 1;
+            }
+        } else if (services["Reservation Type"][i] === "\"Car Service | Pick Up\"" ||
+            services["Reservation Type"][i] === "\"Car Service | Drop Off\""){
+            if (carTrips.hasOwnProperty(dateStr)){
+                carTrips[dateStr] = carTrips[dateStr] + 1;
+            } else {
+                carTrips[dateStr] = 1;
+            }
         }
-        appointments.push(tempJSON);
     }
 
+    let i = 0;
+    Object.keys(boardAndTrain).forEach(function(key) {
+        let tempJSON = {
+            id: i,
+            members: 1,
+            title: "Board & Train: " + boardAndTrain[key],
+            startDate: new Date(key),
+        };
+        tempJSON.endDate = new Date(tempJSON.startDate.getTime() + 86400000 - 1);
+        appointments.push(tempJSON);
+        i++;
+    });
+    Object.keys(boarding).forEach(function(key) {
+        let tempJSON = {
+            id: i,
+            members: 2,
+            title: "Boarding: " + boarding[key],
+            startDate: new Date(key),
+        };
+        tempJSON.endDate = new Date(tempJSON.startDate.getTime() + 86400000 - 1);
+        appointments.push(tempJSON);
+        i++;
+    });
+    Object.keys(carTrips).forEach(function(key) {
+        let tempJSON = {
+            id: i,
+            members: 3,
+            title: "Car Trips: " + carTrips[key],
+            startDate: new Date(key),
+        };
+        tempJSON.endDate = new Date(tempJSON.startDate.getTime() + 86400000 - 1);
+        appointments.push(tempJSON);
+        i++;
+    });
+    console.log(appointments);
+
     const owners = [{
-        text: 'Gabby',
+        text: 'Board & Train',
         id: 1,
         color: lightBlue,
     }, {
-        text: 'Driver',
+        text: 'Boarding',
         id: 2,
         color: green,
     }, {
-        text: 'Unscheduled',
+        text: 'Car Service',
         id: 3,
         color: orange,
     }];
@@ -110,11 +147,11 @@ export default function Transportation(args) {
                     groupByDate={() => true}
                 />
 
+                <MonthView />
                 <WeekView
                     startDayHour={9}
                     endDayHour={21.5}
                 />
-                <MonthView />
 
 
                 <Appointments />

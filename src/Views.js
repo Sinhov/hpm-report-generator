@@ -8,6 +8,7 @@ import Card from "@material-ui/core/Card/Card";
 import Box from "@material-ui/core/Box/Box";
 import Transportation from "./Transportation";
 import Internal from "./Internal";
+import Capacity from "./Capacity";
 
 export const useStyles = makeStyles((theme) => ({
     content: {
@@ -84,7 +85,7 @@ export default function Views(args) {
                     <Internal dfServices={args.dfServices}/>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    Item Three
+                    <Capacity dfServices={args.dfServices}/>
                 </TabPanel>
                 <TabPanel value={value} index={3}>
                     Item Four
